@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ops_swap_push.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matheusms1 <matheusms1@student.42.fr>      +#+  +:+       +#+        */
+/*   By: vfreitass <vfreitas@student.42sp.org.br    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 19:37:16 by matheusms1        #+#    #+#             */
-/*   Updated: 2026/07/16 20:17:23 by matheusms1       ###   ########.fr       */
+/*   Updated: 2026/07/19 09:47:27 by vfreitass        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,12 @@ void	sb(t_stack *b)
 	b->arr[b->size - 1] = b->arr[b->size - 2];
 	b->arr[b->size - 2] = tmp;
 	write(1, "sb\n", 3);
+}
+
+void	ss(t_stack *a, t_stack *b)
+{
+	sa(a);
+	sb(b);
 }
 
 void	pb(t_stack *a, t_stack *b)

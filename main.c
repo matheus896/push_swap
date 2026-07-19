@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matheusms1 <matheusms1@student.42.fr>      +#+  +:+       +#+        */
+/*   By: vfreitass <vfreitas@student.42sp.org.br    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 20:03:21 by matheusms1        #+#    #+#             */
-/*   Updated: 2026/07/16 20:17:32 by matheusms1       ###   ########.fr       */
+/*   Updated: 2026/07/19 12:50:37 by vfreitass        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	main(int argc, char **argv)
 	i = argc - 1;
 	while (i >= 1)
 	{
-		val = atoi(argv[i]);
+		val = atoi(argv[i]); //trocar para ft_atoi depois
 		push(&a, val);
 		i--;
 	}
