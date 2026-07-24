@@ -6,15 +6,15 @@
 /*   By: vfreitas <vfreitas@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 20:03:21 by matheusms1        #+#    #+#             */
-/*   Updated: 2026/07/24 12:03:53 by matheusms1       ###   ########.fr       */
+/*   Updated: 2026/07/24 13:24:12 by vfreitas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-size_t	*operation_counter(void)
+int	*operation_counter(void)
 {
-	static size_t	counter;
+	static int	counter;
 
 	return (&counter);
 }
@@ -30,17 +30,17 @@ void	print_stack(t_stack *stack, char *name)
 {
 	int	i;
 
-	printf("%s\n", name);
-	printf("-----\n");
+	ft_printf("%s\n", name);
+	ft_printf("-----\n");
 
 	i = stack->size - 1;
 	while (i >= 0)
 	{
-		printf("%d\n", stack->arr[i]);
+		ft_printf("%d\n", stack->arr[i]);
 		i--;
 	}
 
-	printf("-----\n");
+	ft_printf("-----\n");
 }
 
 int	main(int argc, char **argv)
@@ -59,18 +59,18 @@ int	main(int argc, char **argv)
 
 	init(&b, a.cap);
 
-	//printf("ANTES:\n");
+	//ft_printf("ANTES:\n");
 	//print_stack(&a, "A");
 	//print_stack(&b, "B");
 
 	//chunk_sort(&a, &b);
 	selection_sort(&a, &b);
 
-	//printf("\nDEPOIS:\n");
+	//ft_printf("\nDEPOIS:\n");
 	//print_stack(&a, "A");
 	//print_stack(&b, "B");
 
-	printf("Numero op: %zu\n", *operation_counter());
+	ft_printf("Numero op: %i\n", *operation_counter());
 	free(a.arr);
 	free(b.arr);
 

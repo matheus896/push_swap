@@ -32,14 +32,14 @@ static void	rot(t_stack *s)
 void	ra(t_stack *a)
 {
 	rot(a);
-	write(1, "ra\n", 3);
+	print_op("ra\n");
 	bench_count(OP_RA);
 }
 
 void	rb(t_stack *b)
 {
 	rot(b);
-	write(1, "rb\n", 3);
+	print_op("rb\n");
 	bench_count(OP_RB);
 }
 
@@ -47,6 +47,6 @@ void	rr(t_stack *a, t_stack *b)
 {
 	rot(a);
 	rot(b);
-	write(1, "rr\n", 3);
+	print_op("rr\n");
 	bench_count(OP_RR);
 }

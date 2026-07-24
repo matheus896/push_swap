@@ -32,14 +32,14 @@ static void	revrot(t_stack *s)
 void	rra(t_stack *a)
 {
 	revrot(a);
-	write(1, "rra\n", 4);
+	print_op("rra\n");
 	bench_count(OP_RRA);
 }
 
 void	rrb(t_stack *b)
 {
 	revrot(b);
-	write(1, "rrb\n", 4);
+	print_op("rrb\n");
 	bench_count(OP_RRB);
 }
 
@@ -47,6 +47,6 @@ void	rrr(t_stack *a, t_stack *b)
 {
 	revrot(a);
 	revrot(b);
-	write(1, "rrr\n", 4);
+	print_op("rrr\n");
 	bench_count(OP_RRR);
 }
