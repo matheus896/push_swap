@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vfreitass <vfreitas@student.42sp.org.br    +#+  +:+       +#+        */
+/*   By: vfreitas <vfreitas@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 19:18:44 by matheusms1        #+#    #+#             */
-/*   Updated: 2026/07/21 07:00:00 by vfreitass        ###   ########.fr       */
+/*   Updated: 2026/07/24 05:54:53 by vfreitas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,15 @@ typedef struct s_stack
 {
 	int	*arr;
 	int	size;
-	int	cap;
 }	t_stack;
+
+typedef	struct s_chunk
+{
+	int	min;
+	int	max;
+	int	width;
+}	t_chunk;
+
 
 typedef enum e_strategy
 {
