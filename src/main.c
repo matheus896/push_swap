@@ -6,7 +6,7 @@
 /*   By: vfreitas <vfreitas@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 20:03:21 by matheusms1        #+#    #+#             */
-/*   Updated: 2026/07/24 13:24:12 by vfreitas         ###   ########.fr       */
+/*   Updated: 2026/07/24 13:43:22 by vfreitas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	print_stack(t_stack *stack, char *name)
 
 	ft_printf("-----\n");
 }
-
+/*
 int	main(int argc, char **argv)
 {
 	t_stack	a;
@@ -75,9 +75,9 @@ int	main(int argc, char **argv)
 	free(b.arr);
 
 	return (0);
-}
+}*/
 
-/*int	main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	t_stack		a;
 	t_stack		b;
@@ -103,4 +103,3 @@ int	main(int argc, char **argv)
 	free(b.arr);
 	return (0);
 }
-*/
