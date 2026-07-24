@@ -76,6 +76,10 @@ void	move_max_to_top(t_stack *b);
 void	restore_stack(t_stack *a, t_stack *b);
 void	chunk_sort(t_stack *a, t_stack *b);
 void	print_stack(t_stack *stack, char *name);
+size_t	*operation_counter(void);
+void	print_op(char *op);
+size_t	ft_strlen(const char *s);
+
 
 
 #endif

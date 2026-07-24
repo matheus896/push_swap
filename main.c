@@ -6,11 +6,25 @@
 /*   By: vfreitas <vfreitas@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 20:03:21 by matheusms1        #+#    #+#             */
-/*   Updated: 2026/07/24 11:11:35 by vfreitas         ###   ########.fr       */
+/*   Updated: 2026/07/24 11:28:18 by vfreitas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
+
+size_t	*operation_counter(void)
+{
+	static size_t	counter;
+
+	return (&counter);
+}
+
+void	print_op(char *op)
+{
+	ft_strlen(op);
+	//write(1, op, ft_strlen(op));
+	(*operation_counter())++;
+}
 
 void	print_stack(t_stack *stack, char *name)
 {
@@ -45,16 +59,18 @@ int	main(int argc, char **argv)
 
 	init(&b, a.cap);
 
-	printf("ANTES:\n");
-	print_stack(&a, "A");
-	print_stack(&b, "B");
+	//printf("ANTES:\n");
+	//print_stack(&a, "A");
+	//print_stack(&b, "B");
 
-	chunk_sort(&a, &b);
+	//chunk_sort(&a, &b);
+	selection_sort(&a, &b);
 
-	printf("\nDEPOIS:\n");
-	print_stack(&a, "A");
-	print_stack(&b, "B");
+	//printf("\nDEPOIS:\n");
+	//print_stack(&a, "A");
+	//print_stack(&b, "B");
 
+	printf("Numero op: %zu\n", *operation_counter());
 	free(a.arr);
 	free(b.arr);
 

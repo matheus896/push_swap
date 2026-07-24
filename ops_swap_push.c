@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ops_swap_push.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matheusms1 <matheusms1@student.42.fr>      +#+  +:+       +#+        */
+/*   By: vfreitas <vfreitas@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 19:37:16 by matheusms1        #+#    #+#             */
-/*   Updated: 2026/07/20 18:33:00 by matheusms1       ###   ########.fr       */
+/*   Updated: 2026/07/24 11:16:16 by vfreitas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	sa(t_stack *a)
 	tmp = a->arr[a->size - 1];
 	a->arr[a->size - 1] = a->arr[a->size - 2];
 	a->arr[a->size - 2] = tmp;
-	write(1, "sa\n", 3);
+	print_op("sa\n");
 }
 
 void	sb(t_stack *b)
@@ -33,7 +33,7 @@ void	sb(t_stack *b)
 	tmp = b->arr[b->size - 1];
 	b->arr[b->size - 1] = b->arr[b->size - 2];
 	b->arr[b->size - 2] = tmp;
-	write(1, "sb\n", 3);
+	print_op("sb\n");
 }
 
 void	ss(t_stack *a, t_stack *b)
@@ -52,7 +52,7 @@ void	ss(t_stack *a, t_stack *b)
 		b->arr[b->size - 1] = b->arr[b->size - 2];
 		b->arr[b->size - 2] = tmp;
 	}
-	write(1, "ss\n", 3);
+	print_op("ss\n");
 }
 
 void	pb(t_stack *a, t_stack *b)
@@ -62,7 +62,7 @@ void	pb(t_stack *a, t_stack *b)
 	b->arr[b->size] = a->arr[a->size - 1];
 	a->size--;
 	b->size++;
-	write(1, "pb\n", 3);
+	print_op("pb\n");
 }
 
 void	pa(t_stack *a, t_stack *b)
@@ -72,5 +72,5 @@ void	pa(t_stack *a, t_stack *b)
 	a->arr[a->size] = b->arr[b->size - 1];
 	b->size--;
 	a->size++;
-	write(1, "pa\n", 3);
+	print_op("pa\n");
 }

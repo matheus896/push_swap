@@ -27,7 +27,7 @@ void	ra(t_stack *a)
 		i--;
 	}
 	a->arr[0] = tmp;
-	write(1, "ra\n", 3);
+	print_op("ra\n");
 }
 
 void	rb(t_stack *b)
@@ -45,7 +45,7 @@ void	rb(t_stack *b)
 		i--;
 	}
 	b->arr[0] = tmp;
-	write(1, "rb\n", 3);
+	print_op("rb\n");
 }
 
 void	rr(t_stack *a, t_stack *b)
@@ -75,5 +75,5 @@ void	rr(t_stack *a, t_stack *b)
 		}
 		b->arr[0] = tmp;
 	}
-	write(1, "rr\n", 3);
+	print_op("rr\n");
 }

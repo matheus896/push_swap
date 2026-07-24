@@ -27,7 +27,7 @@ void	rra(t_stack *a)
 		i++;
 	}
 	a->arr[a->size - 1] = tmp;
-	write(1, "rra\n", 4);
+	print_op("rra\n");
 }
 
 void	rrb(t_stack *b)
@@ -45,7 +45,7 @@ void	rrb(t_stack *b)
 		i++;
 	}
 	b->arr[b->size - 1] = tmp;
-	write(1, "rrb\n", 4);
+	print_op("rrb\n");
 }
 
 void	rrr(t_stack *a, t_stack *b)
@@ -75,5 +75,5 @@ void	rrr(t_stack *a, t_stack *b)
 		}
 		b->arr[b->size - 1] = tmp;
 	}
-	write(1, "rrr\n", 4);
+	print_op("rrr\n");
 }
