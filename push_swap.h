@@ -13,26 +13,23 @@
 #ifndef PUSH_SWAP_H
 # define PUSH_SWAP_H
 
-# include <stdlib.h>
-# include <unistd.h>
-# include <stdio.h>
 # include <limits.h>
-# include <string.h>
+# include "../libft/libft.h"
+# include "../ft_printf/ft_printf.h"
 
 typedef struct s_stack
 {
 	int	*arr;
 	int	size;
-	int cap;
+	int	cap;
 }	t_stack;
 
-typedef	struct s_chunk
+typedef struct s_chunk
 {
 	int	min;
 	int	max;
 	int	width;
 }	t_chunk;
-
 
 typedef enum e_strategy
 {
@@ -59,27 +56,16 @@ void		dispatch(t_stack *a, t_stack *b, t_strategy strategy,
 				int bench_mode);
 void		sort_3(t_stack *a, t_stack *b);
 void		selection_sort(t_stack *a, t_stack *b);
+void		chunk_sort(t_stack *a, t_stack *b);
+int			ft_sqrt(int n);
+void		init_chunk(t_chunk *ck, int size);
+void		next_chunk(t_chunk *ck, int size);
+int			chunk_count(t_chunk *ck);
+void		cosort(t_stack *a, int *cpy);
 int			is_valid_int(char *str);
 long		ft_atol(const char *str);
 int			has_duplicates(t_stack *a);
 int			parse_args(int argc, char **argv, t_stack *a);
 t_strategy	detect_strategy(int argc, char **argv, int *bench_mode);
-
-int	ft_sqrt(int number);
-void	init_chunk(t_chunk *chunk, int stack_size);
-void	next_chunk(t_chunk *chunk, int stack_size);
-void	cosort(t_stack *a, int *cpy);
-int	is_chunk(int value, int *sorted, int size, t_chunk *chunk);
-int chunk_count(t_chunk *chunk);
-int	find_max_pos(t_stack *b);
-void	move_max_to_top(t_stack *b);
-void	restore_stack(t_stack *a, t_stack *b);
-void	chunk_sort(t_stack *a, t_stack *b);
-void	print_stack(t_stack *stack, char *name);
-size_t	*operation_counter(void);
-void	print_op(char *op);
-size_t	ft_strlen(const char *s);
-
-
 
 #endif

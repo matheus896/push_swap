@@ -21,7 +21,8 @@ void	sa(t_stack *a)
 	tmp = a->arr[a->size - 1];
 	a->arr[a->size - 1] = a->arr[a->size - 2];
 	a->arr[a->size - 2] = tmp;
-	print_op("sa\n");
+	write(1, "sa\n", 3);
+	bench_count(OP_SA);
 }
 
 void	sb(t_stack *b)
@@ -33,7 +34,8 @@ void	sb(t_stack *b)
 	tmp = b->arr[b->size - 1];
 	b->arr[b->size - 1] = b->arr[b->size - 2];
 	b->arr[b->size - 2] = tmp;
-	print_op("sb\n");
+	write(1, "sb\n", 3);
+	bench_count(OP_SB);
 }
 
 void	ss(t_stack *a, t_stack *b)
@@ -52,7 +54,8 @@ void	ss(t_stack *a, t_stack *b)
 		b->arr[b->size - 1] = b->arr[b->size - 2];
 		b->arr[b->size - 2] = tmp;
 	}
-	print_op("ss\n");
+	write(1, "ss\n", 3);
+	bench_count(OP_SS);
 }
 
 void	pb(t_stack *a, t_stack *b)
@@ -62,7 +65,8 @@ void	pb(t_stack *a, t_stack *b)
 	b->arr[b->size] = a->arr[a->size - 1];
 	a->size--;
 	b->size++;
-	print_op("pb\n");
+	write(1, "pb\n", 3);
+	bench_count(OP_PB);
 }
 
 void	pa(t_stack *a, t_stack *b)
@@ -72,5 +76,6 @@ void	pa(t_stack *a, t_stack *b)
 	a->arr[a->size] = b->arr[b->size - 1];
 	b->size--;
 	a->size++;
-	print_op("pa\n");
+	write(1, "pa\n", 3);
+	bench_count(OP_PA);
 }

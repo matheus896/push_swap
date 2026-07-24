@@ -12,68 +12,41 @@
 
 #include "push_swap.h"
 
-void	rra(t_stack *a)
+static void	revrot(t_stack *s)
 {
 	int	tmp;
 	int	i;
 
-	if (a->size < 2)
+	if (s->size < 2)
 		return ;
-	tmp = a->arr[0];
+	tmp = s->arr[0];
 	i = 0;
-	while (i < a->size - 1)
+	while (i < s->size - 1)
 	{
-		a->arr[i] = a->arr[i + 1];
+		s->arr[i] = s->arr[i + 1];
 		i++;
 	}
-	a->arr[a->size - 1] = tmp;
-	print_op("rra\n");
+	s->arr[s->size - 1] = tmp;
+}
+
+void	rra(t_stack *a)
+{
+	revrot(a);
+	write(1, "rra\n", 4);
+	bench_count(OP_RRA);
 }
 
 void	rrb(t_stack *b)
 {
-	int	tmp;
-	int	i;
-
-	if (b->size < 2)
-		return ;
-	tmp = b->arr[0];
-	i = 0;
-	while (i < b->size - 1)
-	{
-		b->arr[i] = b->arr[i + 1];
-		i++;
-	}
-	b->arr[b->size - 1] = tmp;
-	print_op("rrb\n");
+	revrot(b);
+	write(1, "rrb\n", 4);
+	bench_count(OP_RRB);
 }
 
 void	rrr(t_stack *a, t_stack *b)
 {
-	int	tmp;
-	int	i;
-
-	if (a->size >= 2)
-	{
-		tmp = a->arr[0];
-		i = 0;
-		while (i < a->size - 1)
-		{
-			a->arr[i] = a->arr[i + 1];
-			i++;
-		}
-		a->arr[a->size - 1] = tmp;
-	}
-	if (b->size >= 2)
-	{
-		tmp = b->arr[0];
-		i = 0;
-		while (i < b->size - 1)
-		{
-			b->arr[i] = b->arr[i + 1];
-			i++;
-		}
-		b->arr[b->size - 1] = tmp;
-	}
-	print_op("rrr\n");
+	revrot(a);
+	revrot(b);
+	write(1, "rrr\n", 4);
+	bench_count(OP_RRR);
 }

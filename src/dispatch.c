@@ -17,6 +17,8 @@ void	dispatch(t_stack *a, t_stack *b, t_strategy strategy, int bench_mode)
 	(void)bench_mode;
 	if (strategy == STRAT_SIMPLE)
 		selection_sort(a, b);
+	else if (strategy == STRAT_MEDIUM)
+		chunk_sort(a, b);
 	else
 		sort_3(a, b);
 }
