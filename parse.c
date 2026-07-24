@@ -6,7 +6,7 @@
 /*   By: matheusms1 <matheusms1@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/20 16:46:40 by matheusms1        #+#    #+#             */
-/*   Updated: 2026/07/20 18:14:30 by matheusms1       ###   ########.fr       */
+/*   Updated: 2026/07/21 17:02:12 by matheusms1       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,11 +81,11 @@ static int	fill_stack(int argc, char **argv, t_stack *a)
 	int		i;
 	long	val;
 
-	i = 1;
-	while (i < argc)
+	i = argc - 1;
+	while (i >= 1)
 	{
 		if (argv[i][0] == '-' && argv[i][1] == '-')
-			i++;
+			i--;
 		else
 		{
 			val = ft_atol(argv[i]);
@@ -95,7 +95,7 @@ static int	fill_stack(int argc, char **argv, t_stack *a)
 				return (0);
 			}
 			push(a, (int)val);
-			i++;
+			i--;
 		}
 	}
 	return (1);
