@@ -24,15 +24,15 @@ t_strategy	detect_strategy(int argc, char **argv, int *bench_mode)
 	{
 		if (argv[i][0] == '-' && argv[i][1] == '-')
 		{
-			if (strcmp(argv[i] + 2, "bench") == 0)
+			if (ft_strncmp(argv[i] + 2, "bench", 5) == 0)
 				*bench_mode = 1;
-			else if (strcmp(argv[i] + 2, "simple") == 0)
+			else if (ft_strncmp(argv[i] + 2, "simple", 6) == 0)
 				strat = STRAT_SIMPLE;
-			else if (strcmp(argv[i] + 2, "medium") == 0)
+			else if (ft_strncmp(argv[i] + 2, "medium", 6) == 0)
 				strat = STRAT_MEDIUM;
-			else if (strcmp(argv[i] + 2, "complex") == 0)
+			else if (ft_strncmp(argv[i] + 2, "complex", 7) == 0)
 				strat = STRAT_COMPLEX;
-			else if (strcmp(argv[i] + 2, "adaptive") == 0)
+			else if (ft_strncmp(argv[i] + 2, "adaptive", 8) == 0)
 				strat = STRAT_ADAPTIVE;
 		}
 		i++;

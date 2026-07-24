@@ -1,115 +1,141 @@
-# push_swap — Tracer Bullet
+# push_swap
 
-*This project has been created as part of the 42 curriculum by <matalmei>, <vitormelo>.*
+*42 school project by <matalmei>, <vitormelo>.*
 
-## O que é isso?
+Sort numbers using two stacks (A and B) with 11 permitted operations (`sa`, `sb`, `ss`, `pa`, `pb`, `ra`, `rb`, `rr`, `rra`, `rrb`, `rrr`). The program receives numbers as arguments and prints the sequence of operations needed to sort them.
 
-Push_swap é um projeto da 42: ordenar números usando duas pilhas (stack A e B) com apenas 11 operações possíveis (`sa`, `sb`, `pa`, `pb`, `ra`, `rb`, `rra`, `rrb`, `ss`, `rr`, `rrr`). O programa recebe os números como argumento e imprime a sequência de operações necessária pra ordenar.
+## State
 
-O estado atual atravessa o sistema inteiro: parsing de args com validação, detecção de flags de estratégia, dispatch pro algoritmo, e um algoritmo O(n²) (selection sort) implementado.
+### Ready
 
-## Estado atual
+| File | Responsibility |
+|------|---------------|
+| `src/stack.c` | `init` (allocate), `push` (insert at top) |
+| `src/ops_swap_push.c` | `sa`, `sb`, `ss`, `pa`, `pb` |
+| `src/ops_rotate.c` | `rot` (static helper), `ra`, `rb`, `rr` |
+| `src/ops_rev_rotate.c` | `revrot` (static helper), `rra`, `rrb`, `rrr` |
+| `src/parse.c` | `is_valid_int`, `ft_atol`, `has_duplicates`, `parse_args` |
+| `src/strategy.c` | `detect_strategy` — parses `--simple`, `--medium`, `--complex`, `--adaptive`, `--bench` |
+| `src/dispatch.c` | Routes `STRAT_SIMPLE` → `selection_sort`, `STRAT_MEDIUM` → `chunk_sort`, others → `sort_3` (fallback) |
+| `src/sort_3.c` | Hard-coded algorithm for exactly 3 elements |
+| `src/sort_simple.c` | Selection sort O(n²): `find_min` (static) + `rotate_n` (static) |
+| `src/chunk_sort.c` | Chunk sort O(n√n): `chunk_pass` (static), `is_chunk` (static), `find_max_pos` (static), `move_max_to_top` (static), `chunk_sort` |
+| `src/chunk_helpers.c` | `ft_sqrt`, `init_chunk`, `next_chunk`, `chunk_count`, `cosort` |
+| `src/bench_count.c` | Operation counter: `bench_count` + benchmark output (`print_bench`) — writes to stderr |
+| `src/bench.c` | `compute_disorder` — ratio of out-of-order pairs × 100 (two decimal places) |
+| `src/main.c` | Detect strategy → parse → dispatch → free |
+| `push_swap.h` | Structs `t_stack`, `t_chunk`, enum `t_strategy`, op defines (`OP_SA`..`OP_RRR`), all prototypes, includes libft/ft_printf |
+| `Makefile` | Compiles `src/` into root, compiles `libft/` and `ft_printf/` as dependencies, `-Wall -Wextra -Werror` |
 
-### Pronto e funcionando
+### To implement
 
-| Módulo | Arquivo | Responsabilidade |
-|--------|---------|------------------|
-| Stack | `stack.c` | `init` (alocar) e `push` (inserir no topo) |
-| Operações push/swap | `ops_swap_push.c` | `sa`, `sb`, `ss`, `pa`, `pb` |
-| Operações rotate | `ops_rotate.c` | `ra`, `rb`, `rr`, `rra`, `rrb`, `rrr` |
-| Operações rev_rotate | `ops_rev_rotate.c` | `rra`, `rrb`, `rrr` (duplicata de ops_rotate.c) |
-| Parsing | `parse.c` | `is_valid_int`, `ft_atol`, `has_duplicates`, `parse_args` |
-| Estratégia | `strategy.c` | `detect_strategy` — lê `--simple`, `--medium`, `--complex`, `--adaptive`, `--bench` |
-| Dispatch | `dispatch.c` | Roteia `STRAT_SIMPLE` → `selection_sort`, demais → `sort_3` |
-| Sort 3 | `sort_3.c` | Algoritmo fixo pra 3 números (só cobre `3 2 1`) |
-| Sort Simple | `sort_simple.c` | Selection sort O(n²) com `find_min` + `rotate_n` |
-| Main | `main.c` | Detecta estratégia → parseia → dispatch → libera |
-| Header | `push_swap.h` | Struct `t_stack`, enum `t_strategy`, protótipos |
-| Makefile | `Makefile` | Compila com `-Wall -Wextra -Werror`, regras `all`/`clean`/`fclean`/`re` |
+| Strategy | Complexity | File (planned) |
+|----------|-----------|----------------|
+| `--complex` | O(n log n) | `src/sort_complex.c` — radix sort on two stacks |
+| `--adaptive` | Per disorder | `src/sort_adaptive.c` — picks algorithm based on `compute_disorder` thresholds |
 
-### A implementar
+## Architecture
 
-| Arquivo | O que fazer |
-|---------|-------------|
-| `sort_medium.c` | O(n√n) — chunk-based, bucket adaptado |
-| `sort_complex.c` | O(n log n) — radix sort, merge sort adaptado |
-| `sort_adaptive.c` | Algoritmo adaptativo baseado em disorder |
-| `bench.c` | Contagem de operações e relatório `--bench` no stderr |
-
-## Arquitetura
-
-### Pipeline do main
+### Main pipeline
 
 ```
-argv → detect_strategy() → t_strategy + bench_mode
-     → parse_args()       → t_stack a preenchida (ou "Error" + exit)
-     → dispatch()         → algoritmo baseado na t_strategy
+argv → detect_strategy() → strategy + bench_mode
+     → parse_args()       → t_stack a filled (or "Error" + exit)
+     → dispatch()         → algorithm per strategy
+     → print_bench()      → stderr (disorder, strategy, operation counts)
      → free()
 ```
 
-### Estratégias (`t_strategy`)
+### Data structures
 
 ```c
+typedef struct s_stack
+{
+    int *arr;
+    int size;
+    int cap;
+}   t_stack;
+
+typedef struct s_chunk
+{
+    int min;
+    int max;
+    int width;
+}   t_chunk;
+
 typedef enum e_strategy
 {
-    STRAT_SIMPLE,    // --simple:   O(n²) — usa selection_sort
-    STRAT_MEDIUM,    // --medium:   O(n√n) — ainda não implementado
-    STRAT_COMPLEX,   // --complex:  O(n log n) — ainda não implementado
-    STRAT_ADAPTIVE   // --adaptive: default, seleciona por disorder
+    STRAT_SIMPLE,    // --simple:   O(n²)
+    STRAT_MEDIUM,    // --medium:   O(n√n) chunk sort
+    STRAT_COMPLEX,   // --complex:  not yet implemented
+    STRAT_ADAPTIVE   // --adaptive: not yet implemented
 }   t_strategy;
 ```
 
-### Parsing
+### Chunk sort (`--medium`)
 
-1. Primeiro loop: conta números (ignora flags `--*`)
-2. `init(a, count)` — aloca o array
-3. `fill_stack` (static): itera `argv` de trás pra frente (primeiro arg = topo da stack), validando com `is_valid_int` + `ft_atol` e checando range `INT_MIN`/`INT_MAX`
-4. `has_duplicates` — verifica duplicatas
+Phase 1: group elements by chunks (width = size / √size), push matching elements from A to B, rotate A to expose new top. Phase 2: restore B to A in descending order by repeatedly finding max and moving it to top, then pushing.
 
-Em caso de erro, `parse_args` libera a memória e retorna `0`. O main escreve `"Error\n"` no stderr e `exit(1)`.
+### Benchmark (`--bench`)
 
-### Dispatch
+All operations call `bench_count(OP_XX)` after `write(1, ...)`. On exit, `print_bench` writes to stderr:
 
-```c
-void dispatch(t_stack *a, t_stack *b, t_strategy s, int bm)
-{
-    (void)bm;
-    if (s == STRAT_SIMPLE)
-        selection_sort(a, b);
-    else
-        sort_3(a, b);
-}
+```
+Disorder: 63.70%
+Strategy: medium (O(n sqrt n))
+Operations: 820
+pa: 100
+pb: 100
+ra: 408
+rb: 107
+rrb: 105
 ```
 
-STRAT_MEDIUM, STRAT_COMPLEX e STRAT_ADAPTIVE ainda caem em `sort_3` (comportamento parcial).
+Counters live as `static int g_ct[11]` + `static char *g_nm[11]` in `bench_count.c`.
 
-### Selection sort (`sort_simple.c`)
+### Libraries
 
-- `find_min` (static): percorre a stack e retorna índice do menor valor
-- `rotate` (static): aplica `ra` ou `rra` N vezes via ponteiro de função
-- `selection_sort`: extrai o mínimo → empurra pra B → repete → devolve tudo pra A
+- **libft**: copied into `libft/` — used for `ft_strncmp`, `ft_strlen`, `ft_putstr_fd`, `ft_putnbr_fd`, `ft_calloc`
+- **ft_printf**: copied into `ft_printf/` — used only in `test_parse.c` (main program uses `write` + libft fd helpers for output, keeping dependencies minimal)
 
-Benchmarks com checker_linux:
-| n | Ops | Resultado |
-|---|-----|-----------|
-| 100 | ~1600 | OK (< 2000 ✓) |
-| 500 | ~31000 | OK (> 12000, esperado O(n²)) |
+### Norma compliance
 
-## Como compilar e testar
+All `src/*.c` files pass norminette. Key constraints observed:
+- Max 5 functions per `.c` file
+- Max 25 lines per function
+- No `typedef` or `struct` declarations in `.c` files
+- No `for`, `switch`, or ternary
+- Operations with duplicated logic (`rr`/`rrr`) share a static helper (`rot`/`revrot`) to stay under 25 lines
+
+## Usage
 
 ```bash
-# Compilar
 make
 
-# Testar --simple (selection sort)
+# Selection sort (O(n²))
 ./push_swap --simple 3 2 1 | ./checker_linux 3 2 1
 
-# Testar n=100
-ARG=$(shuf -i 0-999 -n 100 | tr '\n' ' ')
-./push_swap --simple $ARG | ./checker_linux $ARG
-echo "Ops: $(./push_swap --simple $ARG | wc -l)"
+# Chunk sort (O(n√n))
+./push_swap --medium 3 2 1 | ./checker_linux 3 2 1
 
-# Testar erros
-./push_swap --simple 42 abc                 # "Error" (não-numérico)
-./push_swap --simple 5 3 5                  # "Error" (duplicata)
+# With benchmark (stderr)
+./push_swap --bench --medium 10 5 8 2 1 9 3 7 4 6
+
+# Random test
+ARG=$(shuf -i 0-999 -n 100 | tr '\n' ' ')
+./push_swap --medium $ARG | ./checker_linux $ARG
+echo "Ops: $(./push_swap --medium $ARG | wc -l)"
+
+# Error cases
+./push_swap 42 abc       # "Error" (non-numeric)
+./push_swap 5 3 5        # "Error" (duplicate)
 ```
+
+## Benchmarks (checker_linux)
+
+| Strategy | n | Avg ops | Checker |
+|----------|---|---------|---------|
+| `--simple` | 100 | ~1,600 | OK |
+| `--simple` | 500 | ~31,000 | OK |
+| `--medium` | 100 | ~800 | OK |
+| `--medium` | 500 | ~8,300 | OK |

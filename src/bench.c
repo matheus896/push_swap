@@ -1,26 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   stack.c                                            :+:      :+:    :+:   */
+/*   bench.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: matheusms1 <matheusms1@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/16 19:17:20 by matheusms1        #+#    #+#             */
-/*   Updated: 2026/07/16 19:57:53 by matheusms1       ###   ########.fr       */
+/*   Created: 2026/07/24 17:00:00 by matheusms1        #+#    #+#             */
+/*   Updated: 2026/07/24 12:22:05 by matheusms1       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-void	init(t_stack *s, int cap)
+int	compute_disorder(t_stack *a)
 {
-	s->arr = malloc(cap * sizeof(int));
-	s->size = 0;
-	s->cap = cap;
-}
+	int	i;
+	int	j;
+	int	m;
+	int	t;
 
-void	push(t_stack *s, int val)
-{
-	s->arr[s->size] = val;
-	s->size++;
+	m = 0;
+	t = 0;
+	i = a->size - 1;
+	while (i > 0)
+	{
+		j = i - 1;
+		while (j >= 0)
+		{
+			t++;
+			if (a->arr[i] > a->arr[j])
+				m++;
+			j--;
+		}
+		i--;
+	}
+	if (t == 0)
+		return (0);
+	return ((m * 10000) / t);
 }

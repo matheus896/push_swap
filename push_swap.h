@@ -13,25 +13,23 @@
 #ifndef PUSH_SWAP_H
 # define PUSH_SWAP_H
 
-# include <stdlib.h>
-# include <unistd.h>
-# include <stdio.h>
 # include <limits.h>
-# include <string.h>
+# include "../libft/libft.h"
+# include "../ft_printf/ft_printf.h"
 
 typedef struct s_stack
 {
 	int	*arr;
 	int	size;
+	int	cap;
 }	t_stack;
 
-typedef	struct s_chunk
+typedef struct s_chunk
 {
 	int	min;
 	int	max;
 	int	width;
 }	t_chunk;
-
 
 typedef enum e_strategy
 {
@@ -58,10 +56,31 @@ void		dispatch(t_stack *a, t_stack *b, t_strategy strategy,
 				int bench_mode);
 void		sort_3(t_stack *a, t_stack *b);
 void		selection_sort(t_stack *a, t_stack *b);
+void		chunk_sort(t_stack *a, t_stack *b);
+int			ft_sqrt(int n);
+void		init_chunk(t_chunk *ck, int size);
+void		next_chunk(t_chunk *ck, int size);
+int			chunk_count(t_chunk *ck);
+void		cosort(t_stack *a, int *cpy);
 int			is_valid_int(char *str);
 long		ft_atol(const char *str);
 int			has_duplicates(t_stack *a);
 int			parse_args(int argc, char **argv, t_stack *a);
 t_strategy	detect_strategy(int argc, char **argv, int *bench_mode);
+int			compute_disorder(t_stack *a);
+void		print_bench(t_strategy s, int d);
+void		bench_count(int op);
+
+# define OP_SA  0
+# define OP_SB  1
+# define OP_SS  2
+# define OP_PA  3
+# define OP_PB  4
+# define OP_RA  5
+# define OP_RB  6
+# define OP_RR  7
+# define OP_RRA 8
+# define OP_RRB 9
+# define OP_RRR 10
 
 #endif
