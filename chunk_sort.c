@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "push_swap.h"
+
 int	ft_sqrt(int number)
 {
 	int	i;
@@ -87,58 +89,100 @@ int	is_chunk(int value, int *sorted, int size, t_chunk *chunk)
 	return (0);
 }
 
-int find_chunk_pos(t_stack *a, int *sorted, int size, t_chunk *chunk)
-{
-	int	i;
-
-	i = 0;
-	while (i < a->size)
-	{
-		if (is_chunk(a->arr[a->size - 1 - i], sorted, size, chunk))
-			return (i);
-		i++;
-	}
-	return (-1);
-}
-
 int chunk_count(t_chunk *chunk)
 {
     return (chunk->max - chunk->min + 1);
 }
 
-void    chunk_sort(t_stack *a, t_stack *b)
+int	find_max_pos(t_stack *b)
 {
-    t_chunk chunk;
-    int *sorted;
-    int i;
-    int	pos;
-    int original_size;
+	int	i;
+	int	max;
+	int	pos;
 
-    original_size = a->size;
-    sorted = malloc(sizeof(int) * original_size);
-    
-    cosort(a, sorted);
-    init_chunk(&chunk, original_size);
+	i = b->size - 1;
+	max = b->arr[i];
+	pos = 0;
 
-    while (a->size)
-    {
-        i = 0;
-
-        while (i < chunk_count(&chunk))
-        {
-            pos = find_chunk_pos(a, sorted, original_size, &chunk);
-
-            if (pos == 0)
-            {
-                pb(a, b);
-                i++;
-            }
-            else if (pos <= a->size / 2)
-                ra(a);
-            else
-                rra(a);
-        }
-        next_chunk(&chunk, original_size);
-    }
-    free(sorted);
+	while (i >= 0)
+	{
+		if (b->arr[i] > max)
+		{
+			max = b->arr[i];
+			pos = b->size - 1 - i;
+		}
+		i--;
+	}
+	return (pos);
 }
+
+void	move_max_to_top(t_stack *b)
+{
+	int	pos;
+
+	pos = find_max_pos(b);
+
+	if (pos <= b->size / 2)
+	{
+		while (pos--)
+			rb(b);
+	}
+	else
+	{
+		pos = b->size - pos;
+		while (pos--)
+			rrb(b);
+	}
+}
+
+void	restore_stack(t_stack *a, t_stack *b)
+{
+	while (b->size)
+	{
+		move_max_to_top(b);
+		pa(a, b);
+	}
+}
+
+void	chunk_sort(t_stack *a, t_stack *b)
+{
+	t_chunk chunk;
+	int *sorted;
+	int chunk_elements;
+	int original_size;
+
+	original_size = a->size;
+
+	sorted = malloc(sizeof(int) * original_size);
+	if (!sorted)
+		return ;
+
+	cosort(a, sorted);
+	init_chunk(&chunk, original_size);
+
+	while (a->size > 0)
+	{
+		chunk_elements = chunk_count(&chunk);
+
+		while (chunk_elements > 0)
+		{
+			if (is_chunk(a->arr[a->size - 1],
+					sorted, original_size, &chunk))
+			{
+				pb(a, b);
+				chunk_elements--;
+			}
+			else
+				ra(a);
+		}
+
+		if (chunk.max == original_size - 1)
+			break ;
+
+		next_chunk(&chunk, original_size);
+	}
+
+    restore_stack(a, b);
+	free(sorted);
+}
+

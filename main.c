@@ -3,16 +3,65 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matheusms1 <matheusms1@student.42.fr>      +#+  +:+       +#+        */
+/*   By: vfreitas <vfreitas@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 20:03:21 by matheusms1        #+#    #+#             */
-/*   Updated: 2026/07/20 18:25:59 by matheusms1       ###   ########.fr       */
+/*   Updated: 2026/07/24 11:11:35 by vfreitas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
+void	print_stack(t_stack *stack, char *name)
+{
+	int	i;
+
+	printf("%s\n", name);
+	printf("-----\n");
+
+	i = stack->size - 1;
+	while (i >= 0)
+	{
+		printf("%d\n", stack->arr[i]);
+		i--;
+	}
+
+	printf("-----\n");
+}
+
 int	main(int argc, char **argv)
+{
+	t_stack	a;
+	t_stack	b;
+
+	if (argc < 2)
+		return (0);
+
+	if (!parse_args(argc, argv, &a))
+	{
+		write(2, "Error\n", 6);
+		return (1);
+	}
+
+	init(&b, a.cap);
+
+	printf("ANTES:\n");
+	print_stack(&a, "A");
+	print_stack(&b, "B");
+
+	chunk_sort(&a, &b);
+
+	printf("\nDEPOIS:\n");
+	print_stack(&a, "A");
+	print_stack(&b, "B");
+
+	free(a.arr);
+	free(b.arr);
+
+	return (0);
+}
+
+/*int	main(int argc, char **argv)
 {
 	t_stack		a;
 	t_stack		b;
@@ -33,3 +82,4 @@ int	main(int argc, char **argv)
 	free(b.arr);
 	return (0);
 }
+*/
