@@ -6,7 +6,7 @@
 /*   By: vfreitas <vfreitas@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 20:03:21 by matheusms1        #+#    #+#             */
-/*   Updated: 2026/07/24 13:43:22 by vfreitas         ###   ########.fr       */
+/*   Updated: 2026/07/24 18:12:45 by vfreitas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,16 +59,17 @@ int	main(int argc, char **argv)
 
 	init(&b, a.cap);
 
-	//ft_printf("ANTES:\n");
-	//print_stack(&a, "A");
-	//print_stack(&b, "B");
+	ft_printf("ANTES:\n");
+	print_stack(&a, "A");
+	print_stack(&b, "B");
 
 	//chunk_sort(&a, &b);
-	selection_sort(&a, &b);
+	//selection_sort(&a, &b);
+	binary_radix(&a, &b);
 
-	//ft_printf("\nDEPOIS:\n");
-	//print_stack(&a, "A");
-	//print_stack(&b, "B");
+	ft_printf("\nDEPOIS:\n");
+	print_stack(&a, "A");
+	print_stack(&b, "B");
 
 	ft_printf("Numero op: %i\n", *operation_counter());
 	free(a.arr);

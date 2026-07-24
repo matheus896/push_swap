@@ -72,6 +72,10 @@ void		print_bench(t_strategy s, int d);
 void		print_op(char *op);
 int			*operation_counter(void);
 void		bench_count(int op);
+int			bin_size(int size);
+int 		stack_index_rank(int *sorted, int v, int size);
+void    	binary_radix(t_stack *a, t_stack *b);
+
 
 # define OP_SA  0
 # define OP_SB  1

@@ -1,0 +1,74 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   binary_radix_sort.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vfreitas <vfreitas@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/07/24 17:36:47 by vfreitas          #+#    #+#             */
+/*   Updated: 2026/07/24 17:36:47 by vfreitas         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
+
+int	bin_size(int size)
+{
+	int	count;
+
+	count = 0;
+	while (size > 0)
+	{
+		size /= 2;
+		count++;
+	}
+	return (count);
+}
+
+int stack_index_rank(int *sorted, int v, int size)
+{
+	int	i;
+
+	i = 0;
+	while (i < size)
+	{
+		if (sorted[i] == v)
+			return (i);
+		i++;
+	}
+	return (0);
+}
+
+void    binary_radix(t_stack *a, t_stack *b)
+{
+    int		*sorted;
+	int		size;
+    int     total;
+    int	    max_bin;
+	int	    count_bin;
+    int     i;
+
+    total = a->size;
+	sorted = malloc(sizeof(int) * a->size);
+	if (!sorted)
+		return ;
+	cosort(a, sorted);
+    max_bin = bin_size(a->size - 1);
+	count_bin = 0;
+	while (count_bin < max_bin)
+	{
+		size = a->size;
+		i = 0;
+		while (i < size)
+		{
+			if ((stack_index_rank(sorted, a->arr[a->size - 1], total) >> count_bin) & 1)
+				ra(a);
+			else
+				pb(a, b);
+			i++;
+		}
+		while (b->size > 0)
+			pa(a, b);
+		count_bin++;
+	}
+}

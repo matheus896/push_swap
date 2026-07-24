@@ -19,6 +19,6 @@ void	dispatch(t_stack *a, t_stack *b, t_strategy strategy, int bench_mode)
 		selection_sort(a, b);
 	else if (strategy == STRAT_MEDIUM)
 		chunk_sort(a, b);
-	else
-		sort_3(a, b);
+	else if (strategy == STRAT_COMPLEX)
+		binary_radix(a, b);
 }
