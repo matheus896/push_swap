@@ -6,7 +6,7 @@
 /*   By: vfreitas <vfreitas@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 20:03:21 by matheusms1        #+#    #+#             */
-/*   Updated: 2026/07/25 07:34:03 by vfreitas         ###   ########.fr       */
+/*   Updated: 2026/07/25 13:33:22 by vfreitas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	*operation_counter(void)
 void	print_op(char *op)
 {
 	ft_strlen(op);
-	//write(1, op, ft_strlen(op));
+	write(1, op, ft_strlen(op));
 	(*operation_counter())++;
 }
 
@@ -32,14 +32,12 @@ void	print_stack(t_stack *stack, char *name)
 
 	ft_printf("%s\n", name);
 	ft_printf("-----\n");
-
 	i = stack->size - 1;
 	while (i >= 0)
 	{
 		ft_printf("%d\n", stack->arr[i]);
 		i--;
 	}
-
 	ft_printf("-----\n");
 }
 /*
@@ -101,10 +99,6 @@ int	main(int argc, char **argv)
 	dispatch(&a, &b, strategy, bench_mode);
 	if (bench_mode)
 		print_bench(strategy, disorder);
-	
-	ft_printf("\nPilha Ordenada:\n");
-	print_stack(&a, "A");
-
 	free(a.arr);
 	free(b.arr);
 	return (0);

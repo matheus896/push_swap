@@ -25,7 +25,7 @@ int	bin_size(int size)
 	return (count);
 }
 
-int stack_index_rank(int *sorted, int v, int size)
+int	stack_index_rank(int *sorted, int v, int size)
 {
 	int	i;
 
@@ -39,7 +39,7 @@ int stack_index_rank(int *sorted, int v, int size)
 	return (0);
 }
 
-static void radix_pass(t_stack *a, t_stack *b, int *sorted, int total, int bit)
+static void	radix_pass(t_stack *a, t_stack *b, int *sorted, int total, int bit)
 {
 	int	size;
 	int	i;
