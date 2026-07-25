@@ -39,11 +39,13 @@ int	stack_index_rank(int *sorted, int v, int size)
 	return (0);
 }
 
-static void	radix_pass(t_stack *a, t_stack *b, int *sorted, int total, int bit)
+static void	radix_pass(t_stack *a, t_stack *b, int *sorted, int bit)
 {
+	int	total;
 	int	size;
 	int	i;
 
+	total = a->size + b->size;
 	size = a->size;
 	i = 0;
 	while (i < size)
@@ -74,7 +76,7 @@ void	binary_radix(t_stack *a, t_stack *b)
 	bit = 0;
 	while (bit < max_bin)
 	{
-		radix_pass(a, b, sorted, total, bit);
+		radix_pass(a, b, sorted, bit);
 		bit++;
 	}
 	free(sorted);
