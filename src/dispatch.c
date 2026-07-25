@@ -14,6 +14,8 @@
 
 void	dispatch(t_stack *a, t_stack *b, t_strategy strategy, int bench_mode)
 {
+	int	d;
+
 	(void)bench_mode;
 	if (strategy == STRAT_SIMPLE)
 		selection_sort(a, b);
@@ -21,4 +23,14 @@ void	dispatch(t_stack *a, t_stack *b, t_strategy strategy, int bench_mode)
 		chunk_sort(a, b);
 	else if (strategy == STRAT_COMPLEX)
 		binary_radix(a, b);
+	else if (strategy == STRAT_ADAPTIVE)
+	{
+		d = compute_disorder(a);
+		if (d < 2000)
+			selection_sort(a, b);
+		else if (d < 5000)
+			chunk_sort(a, b);
+		else
+			binary_radix(a, b);
+	}
 }
