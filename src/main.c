@@ -6,7 +6,7 @@
 /*   By: vfreitas <vfreitas@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 20:03:21 by matheusms1        #+#    #+#             */
-/*   Updated: 2026/07/24 18:12:45 by vfreitas         ###   ########.fr       */
+/*   Updated: 2026/07/25 07:34:03 by vfreitas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	print_stack(t_stack *stack, char *name)
 	ft_printf("-----\n");
 }
 /*
-int	main(int argc, char **argv)
+int main(int argc, char **argv)
 {
 	t_stack	a;
 	t_stack	b;
@@ -76,7 +76,8 @@ int	main(int argc, char **argv)
 	free(b.arr);
 
 	return (0);
-}*/
+}
+*/
 
 int	main(int argc, char **argv)
 {
@@ -100,6 +101,10 @@ int	main(int argc, char **argv)
 	dispatch(&a, &b, strategy, bench_mode);
 	if (bench_mode)
 		print_bench(strategy, disorder);
+	
+	ft_printf("\nPilha Ordenada:\n");
+	print_stack(&a, "A");
+
 	free(a.arr);
 	free(b.arr);
 	return (0);

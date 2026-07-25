@@ -39,36 +39,43 @@ int stack_index_rank(int *sorted, int v, int size)
 	return (0);
 }
 
-void    binary_radix(t_stack *a, t_stack *b)
+static void radix_pass(t_stack *a, t_stack *b, int *sorted, int total, int bit)
 {
-    int		*sorted;
-	int		size;
-    int     total;
-    int	    max_bin;
-	int	    count_bin;
-    int     i;
+	int	size;
+	int	i;
 
-    total = a->size;
-	sorted = malloc(sizeof(int) * a->size);
+	size = a->size;
+	i = 0;
+	while (i < size)
+	{
+		if ((stack_index_rank(sorted, a->arr[a->size - 1], total) >> bit) & 1)
+			ra(a);
+		else
+			pb(a, b);
+		i++;
+	}
+	while (b->size > 0)
+		pa(a, b);
+}
+
+void	binary_radix(t_stack *a, t_stack *b)
+{
+	int		*sorted;
+	int		total;
+	int		max_bin;
+	int		bit;
+
+	total = a->size;
+	sorted = malloc(sizeof(int) * total);
 	if (!sorted)
 		return ;
 	cosort(a, sorted);
-    max_bin = bin_size(a->size - 1);
-	count_bin = 0;
-	while (count_bin < max_bin)
+	max_bin = bin_size(total - 1);
+	bit = 0;
+	while (bit < max_bin)
 	{
-		size = a->size;
-		i = 0;
-		while (i < size)
-		{
-			if ((stack_index_rank(sorted, a->arr[a->size - 1], total) >> count_bin) & 1)
-				ra(a);
-			else
-				pb(a, b);
-			i++;
-		}
-		while (b->size > 0)
-			pa(a, b);
-		count_bin++;
+		radix_pass(a, b, sorted, total, bit);
+		bit++;
 	}
+	free(sorted);
 }
