@@ -3,19 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   bench_count.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matheusms1 <matheusms1@student.42.fr>      +#+  +:+       +#+        */
+/*   By: vfreitas <vfreitas@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 18:00:00 by matheusms1        #+#    #+#             */
-/*   Updated: 2026/07/24 18:00:00 by matheusms1       ###   ########.fr       */
+/*   Updated: 2026/07/25 18:35:28 by vfreitas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
 static int		g_ct[11];
-static char		*g_nm[11] = {
-	"sa", "sb", "ss", "pa", "pb",
-	"ra", "rb", "rr", "rra", "rrb", "rrr"};
+static char		*g_nm[11];
+
+void	bench_init()
+{
+	g_nm[0] = "sa";
+	g_nm[1] = "sb";
+	g_nm[2] = "ss";
+	g_nm[3] = "pa";
+	g_nm[4] = "pb";
+	g_nm[5] = "ra";
+	g_nm[6] = "rb";
+	g_nm[7] = "rr";
+	g_nm[8] = "rra";
+	g_nm[9] = "rrb";
+	g_nm[10] = "rrr";
+}
 
 void	bench_count(int op)
 {
@@ -59,6 +72,7 @@ void	print_bench(t_strategy s, int d)
 
 	t = 0;
 	i = 0;
+	bench_init();
 	while (i < 11)
 		t += g_ct[i++];
 	write(2, "Disorder: ", 10);

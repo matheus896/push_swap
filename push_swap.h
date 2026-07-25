@@ -70,6 +70,7 @@ t_strategy	detect_strategy(int argc, char **argv, int *bench_mode);
 int			compute_disorder(t_stack *a);
 void		print_bench(t_strategy s, int d);
 void		print_op(char *op);
+void		bench_init();
 void		bench_count(int op);
 int			bin_size(int size);
 int			stack_index_rank(int *sorted, int v, int size);
