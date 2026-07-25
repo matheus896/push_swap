@@ -1,6 +1,6 @@
 # push_swap
 
-_This project has been created as part of the 42 curriculum by `<matalmei>`, `<vitormelo>`._
+_This project has been created as part of the 42 curriculum by matalmei, vfreitas._
 
 ## Description
 
