@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bench.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matheusms1 <matheusms1@student.42.fr>      +#+  +:+       +#+        */
+/*   By: matalmei <matalmei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/24 17:00:00 by matheusms1        #+#    #+#             */
-/*   Updated: 2026/07/24 12:22:05 by matheusms1       ###   ########.fr       */
+/*   Updated: 2026/07/31 16:16:05 by matalmei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,5 @@ int	compute_disorder(t_stack *a)
 	}
 	if (t == 0)
 		return (0);
-	return ((m * 10000) / t);
+	return ((int)(((long)m * 10000) / t));
 }
