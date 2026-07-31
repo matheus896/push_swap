@@ -35,14 +35,15 @@ static void	adaptive_dispatch(t_stack *a, t_stack *b)
 void	dispatch(t_stack *a, t_stack *b, t_strategy strategy, int bench_mode)
 {
 	(void)bench_mode;
-	if (is_sorted(a))
-		return ;
-	if (strategy == STRAT_SIMPLE)
-		selection_sort(a, b);
-	else if (strategy == STRAT_MEDIUM)
-		chunk_sort(a, b);
-	else if (strategy == STRAT_COMPLEX)
-		binary_radix(a, b);
-	else if (strategy == STRAT_ADAPTIVE)
-		adaptive_dispatch(a, b);
+	if (compute_disorder(a) > 0)
+	{
+		if (strategy == STRAT_SIMPLE)
+			selection_sort(a, b);
+		else if (strategy == STRAT_MEDIUM)
+			chunk_sort(a, b);
+		else if (strategy == STRAT_COMPLEX)
+			binary_radix(a, b);
+		else if (strategy == STRAT_ADAPTIVE)
+			adaptive_dispatch(a, b);
+	}
 }
