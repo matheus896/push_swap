@@ -12,18 +12,15 @@
 
 #include "push_swap.h"
 
-void	dispatch(t_stack *a, t_stack *b, t_strategy strategy, int bench_mode)
+static void	adaptive_dispatch(t_stack *a, t_stack *b)
 {
 	int	d;
 
-	(void)bench_mode;
-	if (strategy == STRAT_SIMPLE)
+	if (a->size <= 3)
+		sort_3(a);
+	else if (a->size <= 5)
 		selection_sort(a, b);
-	else if (strategy == STRAT_MEDIUM)
-		chunk_sort(a, b);
-	else if (strategy == STRAT_COMPLEX)
-		binary_radix(a, b);
-	else if (strategy == STRAT_ADAPTIVE)
+	else
 	{
 		d = compute_disorder(a);
 		if (d < 2000)
@@ -33,4 +30,19 @@ void	dispatch(t_stack *a, t_stack *b, t_strategy strategy, int bench_mode)
 		else
 			binary_radix(a, b);
 	}
+}
+
+void	dispatch(t_stack *a, t_stack *b, t_strategy strategy, int bench_mode)
+{
+	(void)bench_mode;
+	if (is_sorted(a))
+		return ;
+	if (strategy == STRAT_SIMPLE)
+		selection_sort(a, b);
+	else if (strategy == STRAT_MEDIUM)
+		chunk_sort(a, b);
+	else if (strategy == STRAT_COMPLEX)
+		binary_radix(a, b);
+	else if (strategy == STRAT_ADAPTIVE)
+		adaptive_dispatch(a, b);
 }

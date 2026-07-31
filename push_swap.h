@@ -41,6 +41,7 @@ typedef enum e_strategy
 
 void		init(t_stack *s, int cap);
 void		push(t_stack *s, int val);
+int			is_sorted(t_stack *a);
 void		sa(t_stack *a);
 void		sb(t_stack *b);
 void		ss(t_stack *a, t_stack *b);
@@ -54,7 +55,7 @@ void		rrb(t_stack *b);
 void		rrr(t_stack *a, t_stack *b);
 void		dispatch(t_stack *a, t_stack *b, t_strategy strategy,
 				int bench_mode);
-void		sort_3(t_stack *a, t_stack *b);
+void		sort_3(t_stack *a);
 void		selection_sort(t_stack *a, t_stack *b);
 void		chunk_sort(t_stack *a, t_stack *b);
 int			ft_sqrt(int n);
@@ -70,7 +71,6 @@ t_strategy	detect_strategy(int argc, char **argv, int *bench_mode);
 int			compute_disorder(t_stack *a);
 void		print_bench(t_strategy s, int d);
 void		print_op(char *op);
-void		bench_init();
 void		bench_count(int op);
 int			bin_size(int size);
 int			stack_index_rank(int *sorted, int v, int size);

@@ -12,14 +12,12 @@
 
 #include "push_swap.h"
 
-void	sort_3(t_stack *a, t_stack *b)
+void	sort_3(t_stack *a)
 {
-	pb(a, b);
-	pb(a, b);
-	if (b->arr[b->size - 1] < b->arr[b->size - 2])
-		sb(b);
-	pa(a, b);
-	pa(a, b);
-	ra(a);
-	ra(a);
+	if (a->arr[a->size - 1] > a->arr[a->size - 2])
+		sa(a);
+	if (a->arr[0] < a->arr[1])
+		rra(a);
+	if (a->arr[a->size - 1] > a->arr[a->size - 2])
+		sa(a);
 }

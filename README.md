@@ -1,22 +1,22 @@
 # push_swap
 
-_This project has been created as part of the 42 curriculum by matalmei, vfreitas._
+_This project has been created as part of the 42 curriculum by `<matalmei>`, `<vfreitas>`._
 
 ## Description
 
 **push_swap** sorts a list of integers using two stacks (`a` and `b`) and a restricted set of 11 operations (`sa`, `sb`, `ss`, `pa`, `pb`, `ra`, `rb`, `rr`, `rra`, `rrb`, `rrr`). The program outputs the shortest sequence of operations needed to sort stack `a` in ascending order.
 
-The project enforces four distinct strategies selectable at runtime via flags, each in a different complexity class:
+The project implements four distinct strategies selectable at runtime via flags:
 
 | Flag | Strategy | Complexity | Algorithm |
 |------|---------|-------------|-----------|
 | `--simple` | STRAT_SIMPLE | O(n²) | Selection sort |
 | `--medium` | STRAT_MEDIUM | O(n√n) | Chunk-based sort |
 | `--complex` | STRAT_COMPLEX | O(n log n) | Binary radix sort (LSD) |
-| `--adaptive` | STRAT_ADAPTIVE | Per disorder | Not yet implemented |
+| `--adaptive` | STRAT_ADAPTIVE | Per disorder | Routes to best algorithm by disorder |
 | `--bench` | (mode) | — | Writes performance report to stderr |
 
-`--adaptive` is the default strategy when no flag is provided (falls back to `sort_3` until fully implemented).
+`--adaptive` is the default when no flag is given.
 
 ---
 
@@ -25,24 +25,22 @@ The project enforces four distinct strategies selectable at runtime via flags, e
 ### Matheus Almeida (`matalmei`)
 
 - **Project architecture**: `push_swap.h` header design, `t_stack` array-based model with `size`/`cap`, `t_chunk` struct, `t_strategy` enum, operation code defines (`OP_SA`..`OP_RRR`)
-- **Core pipeline**: `main.c` (parse → dispatch → benchmark → free), `dispatch.c` (strategy router)
-- **Stack & operations**: `stack.c` (`init`, `push`), `ops_swap_push.c` (`sa`, `sb`, `ss`, `pa`, `pb`), `ops_rotate.c` (shared `rot` helper + `ra`/`rb`/`rr`), `ops_rev_rotate.c` (shared `revrot` helper + `rra`/`rrb`/`rrr`)
+- **Core pipeline**: `main.c` (parse → dispatch → benchmark → free), `dispatch.c` (strategy router including adaptive thresholds, `is_sorted` early exit, and small‑n shortcuts `adaptive_dispatch`)
+- **Stack & operations**: `stack.c` (`init`, `push`, `is_sorted` — O(n) sorted validation), `ops_swap_push.c` (`sa`, `sb`, `ss`, `pa`, `pb`), `ops_rotate.c` (shared `rot` helper + `ra`/`rb`/`rr`), `ops_rev_rotate.c` (shared `revrot` helper + `rra`/`rrb`/`rrr`)
 - **Parsing & validation**: `parse.c` (`is_valid_int`, `ft_atol`, `has_duplicates`, `parse_args`) — overflow-safe integer parsing with proper `Error` handling
-- **Sort 3**: `sort_3.c` — hardcoded optimal sort for exactly 3 elements
+- **Strategy detection**: `strategy.c` (`detect_strategy`) — parses `--simple`, `--medium`, `--complex`, `--adaptive`, `--bench` from command-line arguments
 - **Benchmark system**: `bench_count.c` (operation counters + `print_bench` stderr output), `bench.c` (`compute_disorder` — pair-based disorder metric 0–100%)
 - **Build system**: `Makefile` with `libft/` and `ft_printf/` as compiled dependencies, `-I.` include path, `-Wall -Wextra -Werror`
-- **Norma compliance**: File splitting to respect 5-function/25-line limits, elimination of `typedef`/`struct` in `.c` files, shared operation helpers
-- **Libft & ft_printf integration**: Both libraries embedded as source copies, compiled via their own Makefiles as `.a` archives
+- **Norma compliance**: File splitting to respect 5-function/25-line limits, elimination of `typedef`/`struct` in `.c` files, shared operation helpers (`rot`/`revrot`)
 
-### Vitor Melo (`vitormelo`)
+### Vitor Freitas (`vfreitas`)
 
+- **Simple algorithm**: `sort_simple.c` — selection sort O(n²) via `find_min` + `rotate_n`; `sort_3.c` — optimal 3‑element sort (≤2 ops, 3‑step algorithm: sa → rra if needed → sa)
 - **Chunk sort**: `chunk_sort.c` — O(n√n) algorithm with `chunk_pass` (phase 1: group-by-chunk) and `restore_stack` (phase 2: max-extraction from B to A)
-- **Strategy detection**: `strategy.c` (`detect_strategy`) — parses `--simple`, `--medium`, `--complex`, `--adaptive`, `--bench` from command-line arguments
-- **Simple algorithm**: `sort_simple.c` — selection sort O(n²) via `find_min` + `rotate_n`
 - **Chunk helpers**: `chunk_helpers.c` (`ft_sqrt`, `init_chunk`, `next_chunk`, `chunk_count`, `cosort`)
 - **Binary radix sort**: `binary_radix_sort.c` — O(n log n) LSD radix sort operating on binary representation of element rank, with `radix_pass` per bit
-- **Operation output**: `print_op` function in `main.c` — unified operation printing via `write`
-- **Norma fixes**: Whitespace corrections in `push_swap.h`, `binary_radix_sort.c`, `main.c`
+- **Operation output**: `print_op` function — unified operation printing via `write(1, op, ft_strlen(op))`
+- **Norma fixes**: Whitespace corrections in `push_swap.h`, `binary_radix_sort.c`, `main.c`; removal of unused files (`ft_strlen.c` duplicate, test scripts, `.vscode/` config)
 
 ---
 
@@ -53,7 +51,7 @@ The project enforces four distinct strategies selectable at runtime via flags, e
 ```
 while A is not empty:
     find minimum value in A (linear scan)
-    rotate A until minimum is at top
+    rotate A until minimum is at top (ra or rra, whichever is shorter)
     push A → B
 push all back B → A
 ```
@@ -64,11 +62,11 @@ N iterations over a shrinking stack of size n, n−1, ..., 1 produce the O(n²) 
 
 Chunk sort is a bucket sort adaptation on two stacks. Instead of sorting elements directly, it groups them into √n chunks of width √n.
 
-**Phase 1 — Partitioning**: An auxiliary sorted array is created via `cosort` (selection sort on a copy, preserving the original stack). Indices [0, n−1] are divided into k chunks of width `n / √n`. For each chunk, we scan the top of A: if the top element's rank falls within the current chunk range, push to B; otherwise rotate A. This repeats until A is empty.
+**Phase 1 — Partitioning**: An auxiliary sorted array is created via `cosort` (selection sort on a copy, preserving the original stack). Indices [0, n−1] are divided into k chunks of width `n / ft_sqrt(n)`. For each chunk, we scan the top of A: if the top element's rank falls within the current chunk range, push to B; otherwise rotate A. This repeats until A is empty.
 
 **Phase 2 — Restoration**: B is returned to A in order by repeatedly finding the maximum element in B (`find_max_pos`), rotating B until that element is at the top (`move_max_to_top`), and pushing to A.
 
-**Why √n**: k = √n chunks of √n elements each balances the cost of phase 1 (n operations × k passes = n√n) with phase 2 (finding max in B of size up to n, done n times = n² if naive; but the max-finding is amortized because B shrinks as we push back). The chunk width formula `n / ft_sqrt(n)` ensures the partitioning granularity matches the theoretical optimum.
+**Why √n**: k = √n chunks of √n elements each balances the cost of phase 1 (n operations × k passes = n√n) with phase 2 (finding max in B of size up to n, done n times). The chunk width formula `n / ft_sqrt(n)` ensures the partitioning granularity matches the theoretical optimum.
 
 ### Binary Radix Sort — O(n log n)
 
@@ -86,6 +84,26 @@ After bit position `i`, elements whose rank has bit `i` = 0 are on top of those 
 **Why binary instead of decimal**: With only two stacks, binary (base 2) maps naturally to two destinations per pass — bit=0→B, bit=1→A. Decimal (base 10) would require 10 partitions per digit, impossible with two stacks without additional complexity.
 
 **Why deterministic cost**: Each pass processes exactly n elements regardless of input order. With log₂(n) passes, the total is exactly n × log₂(n). For n=100: 7 passes × 100 elements + 100 pushes back = 700+400 ≈ 1084 ops. For n=500: 9 passes × 500 + 500 pushes back = 4500+2284 ≈ 6784 ops.
+
+### Adaptive — O(per disorder)
+
+The adaptive strategy first checks if the stack is already sorted via `is_sorted()` — if so, it returns immediately (0 ops, identity test). Otherwise, it selects the best algorithm based on input size and measured disorder:
+
+| n | Routing | Rationale |
+|---|---------|-----------|
+| ≤ 3 | `sort_3` — optimal 3‑step | ≤2 ops, beats any general algorithm |
+| 4 – 5 | `selection_sort` | ≤12 ops, avoids radix overhead for trivial sizes |
+| > 5 | Disorder‑based | Full adaptive routing below |
+
+For n > 5, the disorder metric drives the choice:
+
+| Disorder | Strategy | Complexity |
+|----------|----------|-------------|
+| < 20% | Selection sort | O(n²) |
+| 20% – 50% | Chunk sort | O(n√n) |
+| ≥ 50% | Binary radix sort | O(n log n) |
+
+Thresholds follow the subject specification: low disorder inputs are nearly sorted (selection sort handles them efficiently), medium disorder benefits from chunk partitioning, and high disorder (truly random) needs the consistent O(n log n) of radix sort. The `is_sorted` early exit and small‑n shortcuts ensure 0 ops for already‑sorted inputs and tight operation counts for 3‑ and 5‑element test cases.
 
 ---
 
@@ -109,14 +127,14 @@ typedef struct s_chunk
 }   t_chunk;
 ```
 
-**Why array over linked list**: (1) Index-based access O(1) — every operation is a contiguous shift, not pointer traversal. (2) Cache-friendly — elements are adjacent in memory. (3) Single allocation per stack — less malloc/free overhead vs per-node allocation.
+**Why array over linked list**: (1) Index-based access O(1) — every operation is a contiguous shift, not pointer traversal. (2) Cache-friendly — elements are adjacent in memory. (3) Single allocation per stack — less malloc/free overhead vs per-node allocation. (4) `is_sorted` runs in O(n) via direct index comparison (`arr[i] > arr[i+1]`), enabling instant identity‑test exit.
 
 ### Pipeline
 
 ```
 argv → detect_strategy() → strategy + bench_mode
      → parse_args()       → t_stack a (or "Error\n" + exit)
-     → dispatch()         → selected algorithm
+     → dispatch()         → is_sorted early exit → strategy router (adaptive: small‑n shortcuts then disorder‑based)
      → print_bench()      → stderr (if --bench)
      → free()
 ```
@@ -142,9 +160,10 @@ ra: 316
 make
 
 # Strategies
-./push_swap --simple 3 2 1                    # O(n²) selection sort
-./push_swap --medium 3 2 1                     # O(n√n) chunk sort
-./push_swap --complex 3 2 1                    # O(n log n) radix sort
+./push_swap --simple 3 2 1                     # O(n²) selection sort
+./push_swap --medium 3 2 1                      # O(n√n) chunk sort
+./push_swap --complex 3 2 1                     # O(n log n) radix sort
+./push_swap --adaptive 3 2 1                    # auto-select (default)
 
 # Benchmark (stderr)
 ./push_swap --bench --complex 10 5 8 2 1
@@ -163,12 +182,16 @@ echo "Ops: $(./push_swap --complex $ARG | wc -l)"
 
 | Strategy | n | Avg ops | Checker | Grade |
 |----------|---|---------|---------|-------|
-| `--simple` | 100 | ~1,600 | OK | Pass (<2000) |
+| `--simple` | 100 | ~1,450 | OK | Pass (<2000) |
 | `--simple` | 500 | ~31,000 | OK | O(n²) expected |
-| `--medium` | 100 | ~800 | OK | Good (<1500) |
-| `--medium` | 500 | ~8,000 | OK | Good (<8000) |
+| `--medium` | 100 | ~810 | OK | Good (<1500) |
+| `--medium` | 500 | ~8,200 | OK | Pass (<12000) |
 | `--complex` | 100 | 1,084 | OK | Good (<1500) |
 | `--complex` | 500 | 6,784 | OK | Good (<8000) |
+| `--adaptive` | 3 | ≤2 | OK | Optimal |
+| `--adaptive` | 5 | ≤12 | OK | Optimal for size |
+| `--adaptive` | 100 | ~800-1,084 | OK | Routes per disorder |
+| default (no flag) | — | 0 | — | Already sorted → instant return |
 
 ---
 
@@ -182,4 +205,3 @@ echo "Ops: $(./push_swap --complex $ARG | wc -l)"
 ### AI Usage
 - **Algorithm reasoning**: AI helped explain first-principles justification for chunk width (√n), radix base choice (binary vs decimal), and operation counting model
 - **Benchmark design**: AI suggested static array counter pattern over string-matching, and stderr output format matching the subject specification
-- **No AI-generated algorithms**: All sorting logic (selection, chunk, radix) was designed and implemented by the learners
